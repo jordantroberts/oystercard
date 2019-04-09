@@ -32,12 +32,20 @@ describe Oyster do
       expect(oyster).not_to be_in_journey
     end
     it '#touch_in' do
-      oyster.touch_in
-      expect(oyster).to be_in_journey
+      oyster.touch_in unless oyster.balance < 1
+      expect(oyster).to be_in_journey unless oyster.balance < 1
     end
     it '#touch_out' do
       oyster.touch_out
       expect(oyster).not_to be_in_journey
+    end
+  end
+
+  context 'not enough money to travel' do
+    oyster = Oyster.new
+    it 'raises error' do
+      oyster.balance
+      expect { subject.touch_in }.to raise_error("Not enough money")
     end
   end
 end

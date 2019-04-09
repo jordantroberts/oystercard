@@ -23,7 +23,8 @@ class Oyster
   end
 
   def touch_in
-    @in_use = true
+    raise "Not enough money" if @balance < 1
+    @in_use = true 
     "Touched in"
   end
 

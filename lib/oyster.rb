@@ -3,6 +3,7 @@ class Oyster
   attr_reader :balance
 
   MAX_BALANCE = 90
+  MIN_BALANCE = 1
 
   def initialize
     @balance = 0
@@ -20,13 +21,13 @@ class Oyster
   end
 
   def touch_in
-    raise "Not enough money" if @balance < 1
+    raise "Not enough money" if @balance < MIN_BALANCE
     @in_use = true
     "Touched in"
   end
 
   def touch_out
-    deduct(1)
+    deduct(MIN_BALANCE)
     @in_use = false
     "Touched out"
   end

@@ -37,14 +37,14 @@ describe Oyster do
       expect(oyster).not_to be_in_journey
     end
     it '#touch_in' do
-      oyster.touch_in unless oyster.balance < 1
-      expect(oyster).to be_in_journey unless oyster.balance < 1
+      oyster.touch_in unless oyster.balance < Oyster::MIN_BALANCE
+      expect(oyster).to be_in_journey unless oyster.balance < Oyster::MIN_BALANCE
     end
     it '#touch_out' do
       oyster.top_up(5)
-      oyster.touch_out if oyster.balance > 1
-      expect(oyster).not_to be_in_journey if oyster.balance > 1
-      expect{ oyster.touch_out }.to change{oyster.balance}.by(-1)
+      oyster.touch_out if oyster.balance > Oyster::MIN_BALANCE
+      expect(oyster).not_to be_in_journey if oyster.balance > Oyster::MIN_BALANCE
+      expect{ oyster.touch_out }.to change{oyster.balance}.by(-Oyster::MIN_BALANCE)
     end
   end
 

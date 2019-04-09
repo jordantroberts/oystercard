@@ -18,13 +18,18 @@ describe Oyster do
     end
   end
 
-  context '#deduct' do
-    it 'deducts money' do
-      oyster = Oyster.new
-      oyster.top_up(10)
-      expect { oyster.deduct 5 }.to change { oyster.balance }.by -5
-    end
-  end
+  # Can delete this test as we are using our touch_out method to deduct from the balance, so we are testing
+  # our 'deduct' method implicitly whilst testing touch_out. Our deduct method is not needed by any other
+  # object, so we can move it to private. This helps to keep functionality encapsulated. Now private, you
+  # don't need a test for it. See step 10 of Walkthrough.
+
+  # context '#deduct' do
+  #   it 'deducts money' do
+  #     oyster = Oyster.new
+  #     oyster.top_up(10)
+  #     expect { oyster.deduct 5 }.to change { oyster.balance }.by -5
+  #   end
+  # end
 
   context 'travelling' do
     oyster = Oyster.new
@@ -36,8 +41,10 @@ describe Oyster do
       expect(oyster).to be_in_journey unless oyster.balance < 1
     end
     it '#touch_out' do
-      oyster.touch_out
-      expect(oyster).not_to be_in_journey
+      oyster.top_up(5)
+      oyster.touch_out if oyster.balance > 1
+      expect(oyster).not_to be_in_journey if oyster.balance > 1
+      expect{ oyster.touch_out }.to change{oyster.balance}.by(-1)
     end
   end
 

@@ -5,62 +5,60 @@ describe Oyster do
   let(:station){ double :station }
   let(:journey){ double :journey }
 
-  it 'starts with a balance of 0' do
-    expect(oystercard.balance).to eq 0
-  end
+  describe '#initialize' do
+    it 'starts with a balance of 0' do
+      expect(oystercard.balance).to eq 0
+    end
 
-  it 'has an empty list of journeys' do
-    expect(oystercard.journey_history).to be_empty
-  end
-
-  context '#top up' do
-    oyster = Oyster.new
-    it { expect(oyster.top_up(5)).to eq 5 }
-    it { expect(oyster.top_up(10)).to eq 15 }
-  end
-  context 'max balance exceeded' do
-    it 'raises error' do
-      maximum_balance = Oyster::MAX_BALANCE
-      subject.top_up(maximum_balance)
-      expect { expect(subject.top_up(1)) }.to raise_error("Balance will exceed £#{maximum_balance} maximum")
+    it 'has an empty list of journeys' do
+      expect(oystercard.journey_history).to be_empty
     end
   end
 
-  context 'travelling' do
-    let(:fake_station) { double :station }
-    oyster = Oyster.new
-    it '#in_journey' do
-      expect(oyster).not_to be_in_journey
+    describe '#top up' do
+      it 'can top up the balance' do
+      expect(oystercard.top_up(5)).to eq 5
+      expect(oystercard.top_up(10)).to eq 15 
     end
 
-    it '#touch_in' do
-      oyster.touch_in unless oyster.balance < Oyster::MIN_BALANCE
-      expect(oyster).to be_in_journey unless oyster.balance < Oyster::MIN_BALANCE
+      context 'max balance exceeded' do
+        it 'raises error' do
+          maximum_balance = Oyster::MAX_BALANCE
+          oystercard.top_up(maximum_balance)
+          expect { expect(oystercard.top_up(1)) }.to raise_error("Balance will exceed £#{maximum_balance} maximum")
+        end
+      end
     end
 
-    it '#touch_out' do
-      oyster.top_up(5)
-      oyster.touch_out(station) if oyster.balance > Oyster::MIN_BALANCE
-      expect(oyster).not_to be_in_journey if oyster.balance > Oyster::MIN_BALANCE
-      expect{ oyster.touch_out(station) }.to change{oyster.balance}.by(-Oyster::MIN_BALANCE)
+    describe '#touch_in' do
+      it 'starts a new journey if enough money' do
+      oystercard.touch_in unless oystercard.balance < Oyster::MIN_BALANCE
+      expect(oystercard).to be_in_journey unless oystercard.balance < Oyster::MIN_BALANCE
     end
 
+      context 'not enough money to travel' do
+        it 'raises error' do
+          oystercard.balance
+          expect { oystercard.touch_in(station) }.to raise_error("Not enough money")
+        end
+      end
+    end
+
+    describe '#touch_out' do
+      it 'ends the journey and deducts fare' do
+        oystercard.top_up(5)
+        oystercard.touch_out(station) if oystercard.balance > Oyster::MIN_BALANCE
+        expect(oystercard).not_to be_in_journey if oystercard.balance > Oyster::MIN_BALANCE
+        expect{ oystercard.touch_out(station) }.to change{oystercard.balance}.by(-Oyster::MIN_BALANCE)
+      end
+    end
 
     describe '#add_journey' do
-    it 'stores a journey' do
-      oyster.top_up(10)
-      oyster.touch_in(station)
-      oyster.touch_out(station)
-      expect{ oyster.add_journey }.to change {oyster.journey_history.count}.by(1)
+      it 'stores a journey' do
+        oystercard.top_up(10)
+        oystercard.touch_in(station)
+        oystercard.touch_out(station)
+        expect{ oystercard.add_journey }.to change {oystercard.journey_history.count}.by(1)
+      end
     end
   end
-end
-
-  context 'not enough money to travel' do
-    oyster = Oyster.new
-    it 'raises error' do
-      oyster.balance
-      expect { subject.touch_in(station) }.to raise_error("Not enough money")
-    end
-  end
-end

@@ -26,6 +26,7 @@ class Oyster
 
   def touch_in(station)
     raise "Not enough money" if @balance < MIN_BALANCE
+    @exit_station = nil
     "Touched in"
     @entry_station = station
   end
@@ -35,7 +36,7 @@ class Oyster
     "Touched out"
     @exit_station = station
     add_journey
-    # @entry_station = nil
+    @entry_station = nil 
   end
 
   def add_journey

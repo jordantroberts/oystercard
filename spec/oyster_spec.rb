@@ -42,16 +42,16 @@ describe Oyster do
       expect{ oyster.touch_out(fake_station) }.to change{oyster.balance}.by(-Oyster::MIN_BALANCE)
     end
 
-    let(:entry_station) { double :station }
-    let(:exit_station) { double :station }
-    let(:journey) { {entry_station: entry_station, exit_station: exit_station} }
+  let(:fake_station) { double :station }
+    describe '#add_journey' do
     it 'stores a journey' do
       oyster.top_up(10)
-      oyster.touch_in(entry_station)
-      oyster.touch_out(exit_station)
-      expect(oyster.journey_history).to include oyster.journey
+      oyster.touch_in(fake_station)
+      oyster.touch_out(fake_station)
+      expect{ oyster.add_journey }.to change {oyster.journey_history}.by([])
     end
   end
+end
 
   let(:fake_station) { double :station }
   context 'not enough money to travel' do

@@ -7,7 +7,7 @@ describe Oyster do
   end
 
   it 'has an empty list of journeys' do
-    expect(Oyster::JOURNEY_HISTORY).to be_empty
+    expect(oystercard.journey_history).to be_empty
   end
 
   context '#top up' do
@@ -49,7 +49,7 @@ describe Oyster do
       oyster.top_up(10)
       oyster.touch_in(entry_station)
       oyster.touch_out(exit_station)
-      expect(Oyster::JOURNEY_HISTORY).to include oyster.journey
+      expect(oyster.journey_history).to include oyster.journey
     end
   end
 

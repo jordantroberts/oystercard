@@ -51,7 +51,7 @@ describe Oyster do
       oyster.top_up(10)
       oyster.touch_in(station)
       oyster.touch_out(station)
-      expect{ oyster.add_journey }.to change {oyster.journey_history}.by([])
+      expect{ oyster.add_journey }.to change {oyster.journey_history.count}.by(1)
     end
   end
 end

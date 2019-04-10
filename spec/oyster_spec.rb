@@ -2,6 +2,9 @@ require 'oyster'
 
 describe Oyster do
   subject(:oystercard) { described_class.new }
+  let(:station){ double :station }
+  let(:journey){ double :journey }
+
   it 'starts with a balance of 0' do
     expect(oystercard.balance).to eq 0
   end
@@ -37,28 +40,27 @@ describe Oyster do
 
     it '#touch_out' do
       oyster.top_up(5)
-      oyster.touch_out(fake_station) if oyster.balance > Oyster::MIN_BALANCE
+      oyster.touch_out(station) if oyster.balance > Oyster::MIN_BALANCE
       expect(oyster).not_to be_in_journey if oyster.balance > Oyster::MIN_BALANCE
-      expect{ oyster.touch_out(fake_station) }.to change{oyster.balance}.by(-Oyster::MIN_BALANCE)
+      expect{ oyster.touch_out(station) }.to change{oyster.balance}.by(-Oyster::MIN_BALANCE)
     end
 
-  let(:fake_station) { double :station }
+
     describe '#add_journey' do
     it 'stores a journey' do
       oyster.top_up(10)
-      oyster.touch_in(fake_station)
-      oyster.touch_out(fake_station)
+      oyster.touch_in(station)
+      oyster.touch_out(station)
       expect{ oyster.add_journey }.to change {oyster.journey_history}.by([])
     end
   end
 end
 
-  let(:fake_station) { double :station }
   context 'not enough money to travel' do
     oyster = Oyster.new
     it 'raises error' do
       oyster.balance
-      expect { subject.touch_in(fake_station) }.to raise_error("Not enough money")
+      expect { subject.touch_in(station) }.to raise_error("Not enough money")
     end
   end
 end

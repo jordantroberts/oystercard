@@ -19,28 +19,25 @@ describe Oyster do
     end
   end
 
-  # Can delete this test as we are using our touch_out method to deduct from the balance, so we are testing
-  # our 'deduct' method implicitly whilst testing touch_out. Our deduct method is not needed by any other
-  # object, so we can move it to private. This helps to keep functionality encapsulated. Now private, you
-  # don't need a test for it. See step 10 of Walkthrough.
-
-  # context '#deduct' do
-  #   it 'deducts money' do
-  #     oyster = Oyster.new
-  #     oyster.top_up(10)
-  #     expect { oyster.deduct 5 }.to change { oyster.balance }.by -5
-  #   end
-  # end
-
   context 'travelling' do
+    let(:station) { double :station }
     oyster = Oyster.new
     it '#in_journey' do
       expect(oyster).not_to be_in_journey
     end
+
     it '#touch_in' do
       oyster.touch_in unless oyster.balance < Oyster::MIN_BALANCE
       expect(oyster).to be_in_journey unless oyster.balance < Oyster::MIN_BALANCE
     end
+
+    let(:station) { double :station }
+    it 'remembers station' do
+      subject.top_up(5)
+      subject.touch_in(station)
+      expect(subject.entry_station).to eq station
+    end
+
     it '#touch_out' do
       oyster.top_up(5)
       oyster.touch_out if oyster.balance > Oyster::MIN_BALANCE
@@ -49,11 +46,12 @@ describe Oyster do
     end
   end
 
+  let(:station) { double :station }
   context 'not enough money to travel' do
     oyster = Oyster.new
     it 'raises error' do
       oyster.balance
-      expect { subject.touch_in }.to raise_error("Not enough money")
+      expect { subject.touch_in(station) }.to raise_error("Not enough money")
     end
   end
 end

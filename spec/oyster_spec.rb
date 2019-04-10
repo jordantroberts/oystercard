@@ -1,8 +1,9 @@
 require 'oyster'
 
 describe Oyster do
-  context '#initialize' do
-    it { expect(subject).to have_attributes(:balance => 0) }
+  subject(:oystercard) { described_class.new }
+  it 'starts with a balance of 0' do
+    expect(oystercard.balance).to eq 0
   end
 
   context '#top up' do

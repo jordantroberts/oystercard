@@ -6,6 +6,10 @@ describe Oyster do
     expect(oystercard.balance).to eq 0
   end
 
+  it 'has an empty list of journeys' do
+    expect(Oyster::JOURNEY_HISTORY).to be_empty
+  end
+
   context '#top up' do
     oyster = Oyster.new
     it { expect(oyster.top_up(5)).to eq 5 }
@@ -20,7 +24,7 @@ describe Oyster do
   end
 
   context 'travelling' do
-    let(:station) { double :station }
+    let(:fake_station) { double :station }
     oyster = Oyster.new
     it '#in_journey' do
       expect(oyster).not_to be_in_journey
@@ -31,27 +35,30 @@ describe Oyster do
       expect(oyster).to be_in_journey unless oyster.balance < Oyster::MIN_BALANCE
     end
 
-    let(:station) { double :station }
-    it 'remembers station' do
-      subject.top_up(5)
-      subject.touch_in(station)
-      expect(subject.entry_station).to eq station
-    end
-
     it '#touch_out' do
       oyster.top_up(5)
-      oyster.touch_out if oyster.balance > Oyster::MIN_BALANCE
+      oyster.touch_out(fake_station) if oyster.balance > Oyster::MIN_BALANCE
       expect(oyster).not_to be_in_journey if oyster.balance > Oyster::MIN_BALANCE
-      expect{ oyster.touch_out }.to change{oyster.balance}.by(-Oyster::MIN_BALANCE)
+      expect{ oyster.touch_out(fake_station) }.to change{oyster.balance}.by(-Oyster::MIN_BALANCE)
+    end
+
+    let(:entry_station) { double :station }
+    let(:exit_station) { double :station }
+    let(:journey) { {entry_station: entry_station, exit_station: exit_station} }
+    it 'stores a journey' do
+      oyster.top_up(10)
+      oyster.touch_in(entry_station)
+      oyster.touch_out(exit_station)
+      expect(Oyster::JOURNEY_HISTORY).to include oyster.journey
     end
   end
 
-  let(:station) { double :station }
+  let(:fake_station) { double :station }
   context 'not enough money to travel' do
     oyster = Oyster.new
     it 'raises error' do
       oyster.balance
-      expect { subject.touch_in(station) }.to raise_error("Not enough money")
+      expect { subject.touch_in(fake_station) }.to raise_error("Not enough money")
     end
   end
 end

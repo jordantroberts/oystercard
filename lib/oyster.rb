@@ -1,9 +1,10 @@
+require_relative 'station'
+
 class Oyster
 
   attr_reader :balance
   attr_reader :entry_station
   attr_reader :exit_station
-  attr_reader :journey
   attr_reader :journey_history
 
   MAX_BALANCE = 90
@@ -21,7 +22,7 @@ class Oyster
   end
 
   def in_journey?
-    !!entry_station
+    !!entry_station # !! converts the value to a boolean
   end
 
   def touch_in(station)
@@ -36,7 +37,8 @@ class Oyster
     "Touched out"
     @exit_station = station
     add_journey
-    @entry_station = nil 
+    @entry_station = nil
+    @exit_station
   end
 
   def add_journey

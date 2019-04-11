@@ -18,7 +18,7 @@ describe Oyster do
     describe '#top up' do
       it 'can top up the balance' do
       expect(oystercard.top_up(5)).to eq 5
-      expect(oystercard.top_up(10)).to eq 15 
+      expect(oystercard.top_up(10)).to eq 15
     end
 
       context 'max balance exceeded' do
@@ -47,6 +47,7 @@ describe Oyster do
     describe '#touch_out' do
       it 'ends the journey and deducts fare' do
         oystercard.top_up(5)
+        oystercard.touch_in(station)
         oystercard.touch_out(station) if oystercard.balance > Oyster::MIN_BALANCE
         expect(oystercard).not_to be_in_journey if oystercard.balance > Oyster::MIN_BALANCE
         expect{ oystercard.touch_out(station) }.to change{oystercard.balance}.by(-Oyster::MIN_BALANCE)

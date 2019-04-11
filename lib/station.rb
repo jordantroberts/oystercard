@@ -1,4 +1,5 @@
 require_relative 'oyster'
+require_relative 'journey'
 
 class Station
 

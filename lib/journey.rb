@@ -8,6 +8,8 @@ class Journey
 
   attr_reader :entry_station, :exit_station
 
+  PENALTY_FARE = 10
+
   def start_journey(station)
     @entry_station = station
   end
@@ -17,7 +19,10 @@ class Journey
   end
 
   def journey_complete?
+    !@entry_station.nil? && !@exit_station.nil?
   end
 
+  def penalty
+  end
 
 end

@@ -16,4 +16,12 @@ require 'journey'
         expect(subject.end_journey(station)).to eq station
       end
     end
+
+    describe '#journey_complete?' do
+      it 'returns false if entry and exit stations nil' do
+        subject.start_journey(station)
+        subject.end_journey(station)
+        expect(subject.journey_complete?).to eq true 
+      end
+    end
   end

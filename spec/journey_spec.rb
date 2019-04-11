@@ -21,7 +21,24 @@ require 'journey'
       it 'returns false if entry and exit stations nil' do
         subject.start_journey(station)
         subject.end_journey(station)
-        expect(subject.journey_complete?).to eq true 
+        expect(subject.journey_complete?).to eq true
+      end
+    end
+
+    describe '#fare' do
+      it 'calculates the fare' do
+        subject.start_journey(station)
+        subject.end_journey(station)
+        expect(subject.fare).to eq 1
+    end
+  end
+
+  context 'given an entry station but no exit station' do
+    describe '#penalty' do
+      it 'penalises if no exit station given' do
+        subject.start_journey(station)
+        expect(subject.fare).to eq Journey::PENALTY_FARE
       end
     end
   end
+end

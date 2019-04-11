@@ -6,7 +6,7 @@ require_relative 'station'
 
 class Journey
 
-  attr_reader :entry_station, :exit_station
+  attr_reader :entry_station, :exit_station, :journey_fare
 
   PENALTY_FARE = 10
 
@@ -22,7 +22,16 @@ class Journey
     !@entry_station.nil? && !@exit_station.nil?
   end
 
+  def fare
+    if journey_complete?
+      @journey_fare = 1
+    else
+      penalty
+    end 
+  end
+
   def penalty
+    @journey_fare = PENALTY_FARE unless journey_complete?
   end
 
 end

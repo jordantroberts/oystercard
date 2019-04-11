@@ -25,6 +25,8 @@ require 'journey'
       end
     end
 
+  context 'given both an entry and an exit station' do
+    let(:station) { double :station }
     describe '#fare' do
       it 'calculates the fare' do
         subject.start_journey(station)
@@ -34,6 +36,7 @@ require 'journey'
   end
 
   context 'given an entry station but no exit station' do
+    let(:station) { double :station }
     describe '#penalty' do
       it 'penalises if no exit station given' do
         subject.start_journey(station)

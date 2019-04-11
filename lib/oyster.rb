@@ -3,12 +3,7 @@ require_relative 'journey'
 
 class Oyster
 
-  attr_reader :balance
-  attr_reader :entry_station
-  attr_reader :exit_station
-  attr_reader :journey_history
-  attr_reader :journey_class
-  attr_reader :journey
+  attr_reader :balance, :entry_station, :exit_station, :journey_history, :journey_class, :journey
 
   MAX_BALANCE = 90
   MIN_BALANCE = 1
@@ -16,7 +11,6 @@ class Oyster
   def initialize
     @balance = 0
     @journey_history = []
-    @journey_class = journey_class
   end
 
   def top_up(money)
